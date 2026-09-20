@@ -2,6 +2,11 @@
 
 All notable changes follow Semantic Versioning.
 
+## 1.1.4 — 2026-09-20
+
+- Restore the portable root `SKILL.md` adapter for all seven `/wcag-*` commands.
+- Include and validate the adapter in the npm artifact without restoring removed specifications or documentation trees.
+
 ## 1.1.3 — 2026-09-18
 
 - Reduce the repository to the CLI, runtime source, tests, CI, package metadata, and its single user-facing README.

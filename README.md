@@ -6,6 +6,8 @@
 
 WCAG Accessibility Skills is an open-source command skill for static accessibility evidence, review planning, and CI regression gates. It is intended for web accessibility audits, digital accessibility development, and accessibility compliance workflows across Claude MCP, OpenAI Codex, Gemini function calling, and any agent host that can execute a command or consume JSON.
 
+For skill-aware agents, [SKILL.md](SKILL.md) is the portable adapter. It routes every `/wcag-*` command to the CLI and preserves the manual-review boundary.
+
 ## Contents
 
 - [Why](#why)
@@ -82,7 +84,7 @@ node bin/wcag-skill.js configure AA 2.2
 
 There are no production dependencies to install. To use it as a package command, run `npm link` during local development or execute `node bin/wcag-skill.js` directly. The configuration command writes `.wcag-skill.json` in the current project; commit it only when its shared project policy is intentional.
 
-The npm artifact and repository intentionally contain only the executable, runtime source, tests, CI, `README.md`, `LICENSE`, and package metadata. There are no PRDs, agent-specification files, example projects, configuration presets, or secondary documentation trees to maintain.
+The npm artifact and repository intentionally contain only the executable, runtime source, tests, CI, `README.md`, `SKILL.md`, `LICENSE`, and package metadata. There are no PRDs, example projects, configuration presets, or secondary documentation trees to maintain.
 
 For host integrations, run the CLI in the project sandbox, validate the command arguments, and preserve the canonical JSON unchanged. Each host must apply its own authorization boundary for file writes, network access, or ticket creation.
 
@@ -358,7 +360,7 @@ Use this repository when a team needs a portable, inspectable command contract a
 
 ## Contributing, roadmap, and support
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Contributions must preserve traceability to official criteria and disclose each rule’s limitations. The roadmap includes a version-pinned axe-core adapter, browser fixtures, ACT-rule mapping, performance harness, optional signed report storage, and documented assistive-technology test protocols. These are planned work, not current features.
+Contributions must preserve traceability to official criteria and disclose each rule’s limitations. The roadmap includes a version-pinned axe-core adapter, browser fixtures, ACT-rule mapping, performance harness, optional signed report storage, and documented assistive-technology test protocols. These are planned work, not current features.
 
 MIT permits reuse with the notices preserved; see [LICENSE](LICENSE). Copyright 2026 Tomasz Bołoz, [damtox.pl](https://www.damtox.pl). Report bugs or false positives with a minimal page, tool version, expected criterion handling, and non-sensitive evidence. For accessibility concerns in this documentation, open an issue with the interaction and assistive technology used.
 
