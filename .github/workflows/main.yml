@@ -1,0 +1,29 @@
+name: Run WCAG Audit
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Runs every Monday at 9 AM
+  workflow_dispatch:      # Lets you run it manually
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Run WCAG Audit
+        run: node bin/wcag-skill.js audit https://www.govt.nz --format html --output report.html
+      
+      - name: Upload Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: accessibility-report
+          path: report.html
