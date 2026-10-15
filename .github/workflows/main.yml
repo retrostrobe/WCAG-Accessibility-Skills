@@ -23,7 +23,7 @@ jobs:
         run: node bin/wcag-skill.js audit https://www.govt.nz --format html --output report.html
       
       - name: Upload Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: accessibility-report
           path: report.html
