@@ -12,16 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # 1. Your code
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       # 2. The audit tool (pin ref to a commit SHA once you've reviewed it)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: tomaszboloz/WCAG-Accessibility-Skills
           ref: main
           path: .wcag-tool
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -34,7 +34,7 @@ jobs:
         run: |
           mkdir -p reports
           set +e
-          node .wcag-tool/bin/wcag-skill.js audit https://www.google.com \
+          node .wcag-tool/bin/wcag-skill.js audit https://www.govt.nz \
             --level AA --version 2.2 --format json \
             --output reports/audit.json --fail-on high
           echo "code=$?" >> "$GITHUB_OUTPUT"
@@ -50,7 +50,7 @@ jobs:
       # 6. Always keep the JSON report
       - name: Upload report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wcag-report
           path: reports/
