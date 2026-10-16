@@ -1,0 +1,68 @@
+name: WCAG audit
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  wcag:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Your code
+      - uses: actions/checkout@v4
+
+      # 2. The audit tool (pin ref to a commit SHA once you've reviewed it)
+      - uses: actions/checkout@v4
+        with:
+          repository: tomaszboloz/WCAG-Accessibility-Skills
+          ref: main
+          path: .wcag-tool
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3. Build your site if the target is generated (adjust or delete)
+      # - run: npm ci && npm run build
+
+      # 4. Run the audit and capture the exit code instead of failing immediately
+      - name: Run WCAG audit
+        id: audit
+        run: |
+          mkdir -p reports
+          set +e
+          node .wcag-tool/bin/wcag-skill.js audit https://www.google.com \
+            --level AA --version 2.2 --format json \
+            --output reports/audit.json --fail-on high
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
+      # 5. Render a readable summary (exit 2 means no valid report exists)
+      - name: Add job summary
+        if: steps.audit.outputs.code != '2'
+        run: |
+          node .wcag-tool/bin/wcag-skill.js report reports/audit.json \
+            --format markdown --output reports/audit.md --fail-on none
+          cat reports/audit.md >> "$GITHUB_STEP_SUMMARY"
+
+      # 6. Always keep the JSON report
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wcag-report
+          path: reports/
+          if-no-files-found: ignore
+
+      # 7. Fail the job only now, after the report is saved
+      - name: Enforce result
+        if: steps.audit.outputs.code != '0'
+        run: |
+          if [ "${{ steps.audit.outputs.code }}" = "2" ]; then
+            echo "::error::Audit could not run (bad input, unreadable file, or fetch failure). This is not a pass."
+          else
+            echo "::error::Critical/high accessibility findings detected. See the job summary."
+          fi
+          exit 1
